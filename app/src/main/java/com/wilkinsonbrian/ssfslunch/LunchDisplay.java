@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -14,6 +15,8 @@ import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class LunchDisplay extends Activity {
     private TextView textView;
@@ -50,7 +53,6 @@ public class LunchDisplay extends Activity {
 
         private String downloadUrl(String myurl) throws  IOException {
             InputStream is = null;
-            int len = 500;
 
             try {
                 URL url = new URL(myurl);
@@ -63,7 +65,9 @@ public class LunchDisplay extends Activity {
                 Log.d(DEBUG_TAG, "The response is: " + response);
                 is = conn.getInputStream();
 
-                String contentAsString = readIt(is, len);
+                String contentAsString = readIt(is);
+                LunchMenu weeklyMenu = new LunchMenu(contentAsString);
+                contentAsString = weeklyMenu.newMenu;
                 return contentAsString;
             } finally {
                 if (is != null) {
@@ -72,10 +76,18 @@ public class LunchDisplay extends Activity {
             }
         }
     }
-    public String readIt(InputStream stream, int len) throws IOException, UnsupportedEncodingException {
-        Reader reader = new InputStreamReader(stream, "UTF-8");
-        char[] buffer = new char[len];
-        reader.read(buffer);
-        return new String(buffer);
+    public String readIt(InputStream stream) throws IOException, UnsupportedEncodingException {
+        BufferedReader r = new BufferedReader(new InputStreamReader(stream));
+
+        StringBuilder total = new StringBuilder();
+        String line;
+        while ((line = r.readLine()) != null) {
+            total.append(line + "\n");
+        }
+        //Reader reader = new InputStreamReader(stream, "UTF-8");
+       // char[] buffer = new char[len];
+        //reader.read(buffer);
+        return new String(total);
     }
+
 }
