@@ -4,7 +4,10 @@ import android.app.Activity;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.io.BufferedReader;
@@ -27,8 +30,13 @@ public class LunchDisplay extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lunch_display);
         textView = (TextView) findViewById(R.id.url_result);
+        textView.setMovementMethod(new ScrollingMovementMethod());
+        Spinner spinner = (Spinner) findViewById(R.id.days_spinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.weekdays_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
         new GetLunchMenuFromServer().execute("https://grover.ssfs.org/menus/word/document.xml");
-
     }
 
     public class GetLunchMenuFromServer extends AsyncTask<String, Integer, String> {

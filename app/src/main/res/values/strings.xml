@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">SSFSLunch</string>
+    <string-array name="weekdays_array">
+        <item>MONDAY</item>
+        <item>TUESDAY</item>
+        <item>WEDNESDAY</item>
+        <item>THURSDAY</item>
+        <item>FRIDAY</item>
+    </string-array>
 </resources>
