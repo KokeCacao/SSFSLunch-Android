@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -32,10 +34,10 @@ public class LunchDisplay extends Activity {
     private TextView soups;
     private TextView deli;
 
-    public String rawText;
-    private static final String DEBUG_TAG = "HttpExample";
     public int day;
     public int currentDay;
+
+    private LunchMenu weeklyMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +56,17 @@ public class LunchDisplay extends Activity {
                 R.array.weekdays_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(
+                new AdapterView.OnItemSelectedListener() {
+                    public void onItemSelected(
+                            AdapterView<?> parent, View view, int position, long id) {
+                        Log.v("Got", "This right");
+                        updateMenuItems(position);
+                    }
+                    public void onNothingSelected(AdapterView<?> parent) {
+                        // TODO Auto-generated method stub
+                    }
+                });
         new GetLunchMenuFromServer().execute("https://grover.ssfs.org/menus/word/document.xml");
         Calendar calendar = Calendar.getInstance();
         day = calendar.get(Calendar.DAY_OF_WEEK);
@@ -63,6 +76,14 @@ public class LunchDisplay extends Activity {
         } else {
             spinner.setSelection(0);
         }
+    }
+
+    public void updateMenuItems(int day) {
+        entree.setText(weeklyMenu.getLunchEntree(day));
+        veggie.setText(weeklyMenu.getVegetarianEntree(day));
+        sides.setText(weeklyMenu.getSides(day));
+        soups.setText(weeklyMenu.getSoups(day));
+        deli.setText(weeklyMenu.getDeli(day));
     }
 
     public class GetLunchMenuFromServer extends AsyncTask<String, Integer, String> {
@@ -85,7 +106,7 @@ public class LunchDisplay extends Activity {
             This method is where the UI is first updated.  The default action is to use the
             information from the current day to populate the initial menu.
              */
-            LunchMenu weeklyMenu = new LunchMenu(result);
+            weeklyMenu = new LunchMenu(result);
             entree.setText(weeklyMenu.getLunchEntree(currentDay));
             veggie.setText(weeklyMenu.getVegetarianEntree(currentDay));
             sides.setText(weeklyMenu.getSides(currentDay));
@@ -107,8 +128,6 @@ public class LunchDisplay extends Activity {
                 conn.setConnectTimeout(15000 /* milliseconds */);
                 conn.setRequestMethod("GET");
                 conn.connect();
-                int response = conn.getResponseCode();
-                Log.d(DEBUG_TAG, "The response is: " + response);
                 is = conn.getInputStream();
 
                 String contentAsString = readIt(is);
