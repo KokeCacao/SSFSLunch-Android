@@ -22,4 +22,68 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
+    <TextView
+        android:id="@+id/entree_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/lunch_entree_label"/>
+
+    <TextView
+        android:id="@+id/lunch_entree"
+        android:layout_below="@id/entree_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/veggie_label"
+        android:layout_below="@id/lunch_entree"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/vegetarian_label"/>
+
+    <TextView
+        android:id="@+id/veggie_entree"
+        android:layout_below="@id/veggie_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/sides_label"
+        android:layout_below="@id/veggie_entree"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/sides_label"/>
+
+    <TextView
+        android:id="@+id/sides"
+        android:layout_below="@id/sides_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/soups_label"
+        android:layout_below="@id/sides"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/soups_label"/>
+
+    <TextView
+        android:id="@+id/soups"
+        android:layout_below="@id/soups_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/deli_label"
+        android:layout_below="@id/soups"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/deli_label"/>
+
+    <TextView
+        android:id="@+id/deli"
+        android:layout_below="@id/deli_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
 </RelativeLayout>

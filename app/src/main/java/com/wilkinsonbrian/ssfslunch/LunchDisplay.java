@@ -10,6 +10,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,18 +20,34 @@ import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Calendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class LunchDisplay extends Activity {
     private TextView textView;
+    private TextView entree;
+    private TextView veggie;
+    private TextView sides;
+    private TextView soups;
+    private TextView deli;
+
+    public String rawText;
     private static final String DEBUG_TAG = "HttpExample";
+    public int day;
+    public int currentDay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lunch_display);
         textView = (TextView) findViewById(R.id.url_result);
+        entree = (TextView) findViewById(R.id.lunch_entree);
+        veggie = (TextView) findViewById(R.id.veggie_entree);
+        sides = (TextView) findViewById(R.id.sides);
+        soups = (TextView) findViewById(R.id.soups);
+        deli = (TextView) findViewById(R.id.deli);
+
         textView.setMovementMethod(new ScrollingMovementMethod());
         Spinner spinner = (Spinner) findViewById(R.id.days_spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
@@ -37,6 +55,14 @@ public class LunchDisplay extends Activity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
         new GetLunchMenuFromServer().execute("https://grover.ssfs.org/menus/word/document.xml");
+        Calendar calendar = Calendar.getInstance();
+        day = calendar.get(Calendar.DAY_OF_WEEK);
+        if (day != 1 && day != 7) {
+            currentDay = day - 2;
+            spinner.setSelection(currentDay);
+        } else {
+            spinner.setSelection(0);
+        }
     }
 
     public class GetLunchMenuFromServer extends AsyncTask<String, Integer, String> {
@@ -55,14 +81,26 @@ public class LunchDisplay extends Activity {
 
         @Override
         protected void onPostExecute(String result) {
-            textView.setText(result);
-
+            /*
+            This method is where the UI is first updated.  The default action is to use the
+            information from the current day to populate the initial menu.
+             */
+            LunchMenu weeklyMenu = new LunchMenu(result);
+            entree.setText(weeklyMenu.getLunchEntree(currentDay));
+            veggie.setText(weeklyMenu.getVegetarianEntree(currentDay));
+            sides.setText(weeklyMenu.getSides(currentDay));
+            soups.setText(weeklyMenu.getSoups(currentDay));
+            deli.setText(weeklyMenu.getDeli(currentDay));
         }
 
         private String downloadUrl(String myurl) throws  IOException {
             InputStream is = null;
 
             try {
+
+                /*
+                Reads the XML file from server (grover) and returns the raw xml
+                 */
                 URL url = new URL(myurl);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setReadTimeout(10000 /* milliseconds */);
@@ -74,8 +112,6 @@ public class LunchDisplay extends Activity {
                 is = conn.getInputStream();
 
                 String contentAsString = readIt(is);
-                LunchMenu weeklyMenu = new LunchMenu(contentAsString);
-                contentAsString = weeklyMenu.newMenu;
                 return contentAsString;
             } finally {
                 if (is != null) {
@@ -84,6 +120,10 @@ public class LunchDisplay extends Activity {
             }
         }
     }
+    /*
+    Takes the URL data and appends each line of XML one by one to the Stringbuilder.
+    The final string returned is the complete XML file with all the tags.
+     */
     public String readIt(InputStream stream) throws IOException, UnsupportedEncodingException {
         BufferedReader r = new BufferedReader(new InputStreamReader(stream));
 
@@ -97,5 +137,6 @@ public class LunchDisplay extends Activity {
         //reader.read(buffer);
         return new String(total);
     }
+
 
 }
