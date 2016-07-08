@@ -26,8 +26,9 @@ import java.util.Calendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class LunchDisplay extends Activity {
-    private TextView textView;
+public class LunchDisplay extends Activity implements AsyncResponse {
+
+    GetLunchMenuFromServer asyncTask = new GetLunchMenuFromServer();
     private TextView entree;
     private TextView veggie;
     private TextView sides;
@@ -39,18 +40,24 @@ public class LunchDisplay extends Activity {
 
     private LunchMenu weeklyMenu;
 
+    private static final String WEBSERVER = "https://grover.ssfs.org/menus/word/document.xml";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lunch_display);
-        textView = (TextView) findViewById(R.id.url_result);
+
         entree = (TextView) findViewById(R.id.lunch_entree);
         veggie = (TextView) findViewById(R.id.veggie_entree);
         sides = (TextView) findViewById(R.id.sides);
         soups = (TextView) findViewById(R.id.soups);
         deli = (TextView) findViewById(R.id.deli);
 
-        textView.setMovementMethod(new ScrollingMovementMethod());
+        /*
+        Creates spinner object and populates with the days of the week from the strings.xml file.
+        Listener is added so that when a day of the week is clicked, the menu for that day is
+        loaded.
+         */
         Spinner spinner = (Spinner) findViewById(R.id.days_spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.weekdays_array, android.R.layout.simple_spinner_item);
@@ -60,14 +67,24 @@ public class LunchDisplay extends Activity {
                 new AdapterView.OnItemSelectedListener() {
                     public void onItemSelected(
                             AdapterView<?> parent, View view, int position, long id) {
-                        Log.v("Got", "This right");
-                        updateMenuItems(position);
+                        if (weeklyMenu != null) {
+                            updateMenuItems(position);
+                        }
                     }
                     public void onNothingSelected(AdapterView<?> parent) {
                         // TODO Auto-generated method stub
                     }
                 });
-        new GetLunchMenuFromServer().execute("https://grover.ssfs.org/menus/word/document.xml");
+
+        // Starts the AsyncTask that actually retrieves the lunch data from the server.
+        asyncTask.delegate = this;
+        asyncTask.execute(WEBSERVER);
+
+       /*
+       Used to initially set up the spinner with the current day of the week.  Checks to make sure
+       that the current day is not Sunday (1) or Saturday (7).  Since there are only 5 week days,
+       must subtract 2 from the calendar day to get the right array index of the spinner.
+        */
         Calendar calendar = Calendar.getInstance();
         day = calendar.get(Calendar.DAY_OF_WEEK);
         if (day != 1 && day != 7) {
@@ -78,7 +95,16 @@ public class LunchDisplay extends Activity {
         }
     }
 
+    public void processFinish(String output){
+        weeklyMenu = new LunchMenu(output);
+        updateMenuItems(currentDay);
+    }
+
     public void updateMenuItems(int day) {
+        /*
+        Method called when a new value is chosen from the spinner.  The index (day) of the spinner
+        is passed to this method.
+         */
         entree.setText(weeklyMenu.getLunchEntree(day));
         veggie.setText(weeklyMenu.getVegetarianEntree(day));
         sides.setText(weeklyMenu.getSides(day));
@@ -86,7 +112,9 @@ public class LunchDisplay extends Activity {
         deli.setText(weeklyMenu.getDeli(day));
     }
 
+
     public class GetLunchMenuFromServer extends AsyncTask<String, Integer, String> {
+        public AsyncResponse delegate = null;
 
         @Override
         protected String doInBackground(String... params) {
@@ -104,14 +132,17 @@ public class LunchDisplay extends Activity {
         protected void onPostExecute(String result) {
             /*
             This method is where the UI is first updated.  The default action is to use the
-            information from the current day to populate the initial menu.
+            information from the current day to populate the initial menu.  Further updates
+            will come when a different date is selected in the spinner.
              */
-            weeklyMenu = new LunchMenu(result);
-            entree.setText(weeklyMenu.getLunchEntree(currentDay));
-            veggie.setText(weeklyMenu.getVegetarianEntree(currentDay));
-            sides.setText(weeklyMenu.getSides(currentDay));
-            soups.setText(weeklyMenu.getSoups(currentDay));
-            deli.setText(weeklyMenu.getDeli(currentDay));
+            LunchDisplay.this.weeklyMenu = new LunchMenu(result);
+            LunchDisplay.this.updateMenuItems(currentDay);
+            delegate.processFinish(result);
+//            entree.setText(weeklyMenu.getLunchEntree(currentDay));
+//            veggie.setText(weeklyMenu.getVegetarianEntree(currentDay));
+//            sides.setText(weeklyMenu.getSides(currentDay));
+//            soups.setText(weeklyMenu.getSoups(currentDay));
+//            deli.setText(weeklyMenu.getDeli(currentDay));
         }
 
         private String downloadUrl(String myurl) throws  IOException {
@@ -130,8 +161,7 @@ public class LunchDisplay extends Activity {
                 conn.connect();
                 is = conn.getInputStream();
 
-                String contentAsString = readIt(is);
-                return contentAsString;
+                return readIt(is);
             } finally {
                 if (is != null) {
                     is.close();
@@ -151,9 +181,7 @@ public class LunchDisplay extends Activity {
         while ((line = r.readLine()) != null) {
             total.append(line + "\n");
         }
-        //Reader reader = new InputStreamReader(stream, "UTF-8");
-       // char[] buffer = new char[len];
-        //reader.read(buffer);
+
         return new String(total);
     }
 

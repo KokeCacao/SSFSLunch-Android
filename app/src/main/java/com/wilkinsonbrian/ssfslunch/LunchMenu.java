@@ -11,35 +11,46 @@ public class LunchMenu {
 
     private String newMenu;
     ArrayList<String> individualDayMenus = new ArrayList<>();
+
+    //Regular Expressions to get the full menu for each day
     private String[] regExpForDays = {"MONDAY(.*?)TUESDAY","TUESDAY(.*?)WEDNESDAY",
             "WEDNESDAY(.*?)THURSDAY", "THURSDAY(.*?)FRIDAY", "FRIDAY.[0-9](.*?)DINNER ENTREE"};
 
     public LunchMenu(String rawXML) {
+        /*
+        Constructor receives the raw XML file from the server and passes it to the function
+        that will remove all tags and keep only the text data.  The second method call creates
+        a complete menu (lunch, veggie, sides, etc.) for each of the days.
+         */
         newMenu = stripOutXML(rawXML);
         getCompleteMenuForEachDay();
     }
 
+    /**
+     * In the Word XML file, all pertinent text is enclosed by the <w:t> and the </w:t> tags.
+     * In some cases there is extra text after the opening tag.  The regular expression below
+     * compensates for this and returns a solid block of text without any XML information.
+     * @param rawXML xml data returned from the webserver, contains tags.
+     * @return a string containing only the text from the original Word document.
+     */
     private String stripOutXML(String rawXML) {
+
         StringBuilder menu = new StringBuilder();
         Pattern pattern = Pattern.compile("<w:t( .*?)?>(.*?)</w:t>");
         Matcher m = pattern.matcher(rawXML);
         while (m.find()) {
-            menu.append(m.group(2));
+            menu.append(m.group(2)); //group 2 refers to the second set of parenthesis
         }
         return new String(menu);
     }
 
-    public String getDailyMenu(String text, String expression) {
-        Pattern pattern = Pattern.compile(expression);
-        Matcher m = pattern.matcher(text);
-        if (m.find()) {
-            return m.group(1);
-        } else {
-            return "";
-        }
-    }
-
+    /**
+     * End result of this function is an arraylist containing strings of a complete menu, one for
+     * each day of the week.  These will later be processed and the individual items will be
+     * teased out.
+     */
     private void getCompleteMenuForEachDay() {
+
         for (String expression : regExpForDays) {
             Pattern pattern = Pattern.compile(expression);
             Matcher m = pattern.matcher(newMenu);
@@ -49,6 +60,12 @@ public class LunchMenu {
         }
     }
 
+    /**
+     * Uses Regex matching to find the lunch entree for a given day. If none exists, a blank
+     * string will be returned.
+     * @param dayOfWeek an int - Monday = 0, Friday = 4.
+     * @return the lunch entree for the given day.
+     */
     public String getLunchEntree(int dayOfWeek) {
         Pattern pattern = Pattern.compile("LUNCH ENTRÉE(.*?)VEGETARIAN");
         Matcher m = pattern.matcher(individualDayMenus.get(dayOfWeek));
