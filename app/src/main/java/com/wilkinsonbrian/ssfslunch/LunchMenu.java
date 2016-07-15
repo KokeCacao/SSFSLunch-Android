@@ -69,7 +69,7 @@ public class LunchMenu {
      * @return the lunch entree for the given day.
      */
     public String getLunchEntree(int dayOfWeek) {
-        Pattern pattern = Pattern.compile("LUNCH ENTRÉE(.*?)VEGETARIAN");
+        Pattern pattern = Pattern.compile("LUNCH ENTRÉE(.*?)VEGETARIAN|DINNER");
         Matcher m = pattern.matcher(individualDayMenus.get(dayOfWeek));
         if (m.find()) {
             return m.group(1);
