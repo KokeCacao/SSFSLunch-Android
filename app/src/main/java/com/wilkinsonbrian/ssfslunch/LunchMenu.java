@@ -41,7 +41,9 @@ public class LunchMenu {
         while (m.find()) {
             menu.append(m.group(2)); //group 2 refers to the second set of parenthesis
         }
-        return new String(menu);
+        String completeMenu = new String(menu);
+        completeMenu = completeMenu.replace("&amp;", "&"); // Removes the ugly html leftover
+        return completeMenu;
     }
 
     /**
