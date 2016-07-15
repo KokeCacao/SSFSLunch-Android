@@ -67,6 +67,11 @@ public class LunchDisplay extends Activity implements AsyncResponse {
                 new AdapterView.OnItemSelectedListener() {
                     public void onItemSelected(
                             AdapterView<?> parent, View view, int position, long id) {
+                        /*
+                        Seems like this gets called when the app initially starts, and before
+                        the weeklyMenu is initialized.  Checks to make sure it has been set up
+                        before the items are updated.
+                         */
                         if (weeklyMenu != null) {
                             updateMenuItems(position);
                         }
@@ -138,11 +143,6 @@ public class LunchDisplay extends Activity implements AsyncResponse {
             LunchDisplay.this.weeklyMenu = new LunchMenu(result);
             LunchDisplay.this.updateMenuItems(currentDay);
             delegate.processFinish(result);
-//            entree.setText(weeklyMenu.getLunchEntree(currentDay));
-//            veggie.setText(weeklyMenu.getVegetarianEntree(currentDay));
-//            sides.setText(weeklyMenu.getSides(currentDay));
-//            soups.setText(weeklyMenu.getSoups(currentDay));
-//            deli.setText(weeklyMenu.getDeli(currentDay));
         }
 
         private String downloadUrl(String myurl) throws  IOException {

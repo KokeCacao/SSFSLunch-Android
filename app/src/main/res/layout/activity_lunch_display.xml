@@ -14,76 +14,95 @@
         android:id="@+id/days_spinner"
         android:layout_alignParentBottom="true"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true" />
 
-    <TextView
-        android:id="@+id/url_result"
-        android:layout_above="@id/days_spinner"
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_alignParentTop="true"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:src="@drawable/ssfs_logo" />
 
     <TextView
         android:id="@+id/entree_label"
+        android:layout_below="@id/logo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/lunch_entree_label"/>
+        android:text="@string/lunch_entree_label"
+        android:layout_centerHorizontal="true"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/lunch_entree"
         android:layout_below="@id/entree_label"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:id="@+id/veggie_label"
         android:layout_below="@id/lunch_entree"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/vegetarian_label"/>
+        android:text="@string/vegetarian_label"
+        android:layout_centerHorizontal="true"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/veggie_entree"
         android:layout_below="@id/veggie_label"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"/>
 
     <TextView
         android:id="@+id/sides_label"
         android:layout_below="@id/veggie_entree"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/sides_label"/>
+        android:text="@string/sides_label"
+        android:layout_centerHorizontal="true"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/sides"
         android:layout_below="@id/sides_label"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:id="@+id/soups_label"
         android:layout_below="@id/sides"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/soups_label"/>
+        android:text="@string/soups_label"
+        android:layout_centerHorizontal="true"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/soups"
         android:layout_below="@id/soups_label"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:id="@+id/deli_label"
         android:layout_below="@id/soups"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/deli_label"/>
+        android:text="@string/deli_label"
+        android:layout_centerHorizontal="true"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/deli"
         android:layout_below="@id/deli_label"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true" />
+
 
 </RelativeLayout>

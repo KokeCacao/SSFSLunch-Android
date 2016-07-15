@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SSFSLunch</string>
+    <string name="app_name">SSFS Lunch Menu</string>
     <string-array name="weekdays_array">
         <item>MONDAY</item>
         <item>TUESDAY</item>
