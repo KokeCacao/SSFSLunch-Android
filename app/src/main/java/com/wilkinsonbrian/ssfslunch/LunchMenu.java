@@ -6,6 +6,8 @@ import java.util.regex.Pattern;
 
 /**
  * Created by wilkibr on 7/5/2016.
+ * Last modified 1/12/2017 to remove soups as they are no longer included
+ * on the menu.
  */
 public class LunchMenu {
 
@@ -85,15 +87,7 @@ public class LunchMenu {
     }
 
     public String getSides(int dayOfWeek) {
-        Pattern pattern = Pattern.compile("SIDES(.*?)SOUPER SOUPS");
-        Matcher m = pattern.matcher(individualDayMenus.get(dayOfWeek));
-        if (m.find()) {
-            return m.group(1);
-        } else return "";
-    }
-
-    public String getSoups(int dayOfWeek) {
-        Pattern pattern = Pattern.compile("SOUPER SOUPS(.*?)DOWNTOWN");
+        Pattern pattern = Pattern.compile("SIDES(.*?)DOWNTOWN DELI");
         Matcher m = pattern.matcher(individualDayMenus.get(dayOfWeek));
         if (m.find()) {
             return m.group(1);

@@ -32,7 +32,6 @@ public class LunchDisplay extends Activity implements AsyncResponse {
     private TextView entree;
     private TextView veggie;
     private TextView sides;
-    private TextView soups;
     private TextView deli;
 
     public int day;
@@ -50,7 +49,6 @@ public class LunchDisplay extends Activity implements AsyncResponse {
         entree = (TextView) findViewById(R.id.lunch_entree);
         veggie = (TextView) findViewById(R.id.veggie_entree);
         sides = (TextView) findViewById(R.id.sides);
-        soups = (TextView) findViewById(R.id.soups);
         deli = (TextView) findViewById(R.id.deli);
 
         /*
@@ -113,7 +111,6 @@ public class LunchDisplay extends Activity implements AsyncResponse {
         entree.setText(weeklyMenu.getLunchEntree(day));
         veggie.setText(weeklyMenu.getVegetarianEntree(day));
         sides.setText(weeklyMenu.getSides(day));
-        soups.setText(weeklyMenu.getSoups(day));
         deli.setText(weeklyMenu.getDeli(day));
     }
 

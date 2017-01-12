@@ -72,25 +72,11 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true" />
 
-    <TextView
-        android:id="@+id/soups_label"
-        android:layout_below="@id/sides"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/soups_label"
-        android:layout_centerHorizontal="true"
-        android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/soups"
-        android:layout_below="@id/soups_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true" />
 
     <TextView
         android:id="@+id/deli_label"
-        android:layout_below="@id/soups"
+        android:layout_below="@id/sides"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/deli_label"
