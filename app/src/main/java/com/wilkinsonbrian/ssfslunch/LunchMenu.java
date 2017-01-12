@@ -1,5 +1,8 @@
 package com.wilkinsonbrian.ssfslunch;
 
+import android.os.Debug;
+
+import java.io.Console;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -90,7 +93,10 @@ public class LunchMenu {
         Pattern pattern = Pattern.compile("SIDES(.*?)DOWNTOWN DELI");
         Matcher m = pattern.matcher(individualDayMenus.get(dayOfWeek));
         if (m.find()) {
-            return m.group(1);
+            // Will insert a space if there are more than one side
+            // Answer courtesy of David Levine
+
+            return m.group(1).replaceAll("(?<=[a-z])[A-Z]", ", $0");
         } else return "";
     }
 
