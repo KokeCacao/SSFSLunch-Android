@@ -35,7 +35,7 @@ public class LunchDisplay extends Activity implements AsyncResponse {
     private TextView veggie;
     private TextView sides;
     private TextView deli;
-
+    private Spinner spinner;
     public int day;
     public int currentDay;
 
@@ -43,7 +43,6 @@ public class LunchDisplay extends Activity implements AsyncResponse {
 
     // used for capturing touch position
     private float x1, x2;
-    private float y1, y2;
 
     private static final String WEBSERVER = "https://grover.ssfs.org/menus/word/document.xml";
 
@@ -62,7 +61,7 @@ public class LunchDisplay extends Activity implements AsyncResponse {
         Listener is added so that when a day of the week is clicked, the menu for that day is
         loaded.
          */
-        Spinner spinner = (Spinner) findViewById(R.id.days_spinner);
+        spinner = (Spinner) findViewById(R.id.days_spinner);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.weekdays_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -104,6 +103,19 @@ public class LunchDisplay extends Activity implements AsyncResponse {
         }
     }
 
+    public void changeDay(String direction) {
+        if (direction == "Left") {
+            currentDay -= 1;
+
+        } else if (direction == "Right") {
+            currentDay += 1;
+        }
+
+        if (currentDay >= 0 && currentDay <= 4) {
+            spinner.setSelection(currentDay);
+        }
+    }
+
     public void processFinish(String output){
         weeklyMenu = new LunchMenu(output);
         updateMenuItems(currentDay);
@@ -117,24 +129,22 @@ public class LunchDisplay extends Activity implements AsyncResponse {
             case MotionEvent.ACTION_DOWN:
             {
                 x1 = touchevent.getX();
-                y1 = touchevent.getY();
                 break;
             }
             case MotionEvent.ACTION_UP:
             {
                 x2 = touchevent.getX();
-                y2 = touchevent.getY();
 
                 //if left to right sweep event on screen
                 if (x1 < x2)
                 {
-                    Toast.makeText(this, "Left to Right Swap Performed", Toast.LENGTH_LONG).show();
+                    changeDay("Left");
                 }
 
                 // if right to left sweep event on screen
                 if (x1 > x2)
                 {
-                    Toast.makeText(this, "Right to Left Swap Performed", Toast.LENGTH_LONG).show();
+                    changeDay("Right");
                 }
                 break;
             }
