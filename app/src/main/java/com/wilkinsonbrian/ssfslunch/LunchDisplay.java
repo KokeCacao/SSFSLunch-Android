@@ -6,11 +6,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
@@ -38,6 +40,10 @@ public class LunchDisplay extends Activity implements AsyncResponse {
     public int currentDay;
 
     private LunchMenu weeklyMenu;
+
+    // used for capturing touch position
+    private float x1, x2;
+    private float y1, y2;
 
     private static final String WEBSERVER = "https://grover.ssfs.org/menus/word/document.xml";
 
@@ -101,6 +107,39 @@ public class LunchDisplay extends Activity implements AsyncResponse {
     public void processFinish(String output){
         weeklyMenu = new LunchMenu(output);
         updateMenuItems(currentDay);
+    }
+
+    public boolean onTouchEvent(MotionEvent touchevent)
+    {
+        switch (touchevent.getAction())
+        {
+            // when user first touches the screen we get x and y coordinate
+            case MotionEvent.ACTION_DOWN:
+            {
+                x1 = touchevent.getX();
+                y1 = touchevent.getY();
+                break;
+            }
+            case MotionEvent.ACTION_UP:
+            {
+                x2 = touchevent.getX();
+                y2 = touchevent.getY();
+
+                //if left to right sweep event on screen
+                if (x1 < x2)
+                {
+                    Toast.makeText(this, "Left to Right Swap Performed", Toast.LENGTH_LONG).show();
+                }
+
+                // if right to left sweep event on screen
+                if (x1 > x2)
+                {
+                    Toast.makeText(this, "Right to Left Swap Performed", Toast.LENGTH_LONG).show();
+                }
+                break;
+            }
+        }
+        return false;
     }
 
     public void updateMenuItems(int day) {
